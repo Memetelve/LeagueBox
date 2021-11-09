@@ -1,6 +1,7 @@
 
 *.pyc
 app.log
+test*.py
 json/champ-data.json
 json/lol-champions-v1-inventories-61663941-champions-minimal.json
 json/lol-champions-v1-owned-champions-minimal.json
