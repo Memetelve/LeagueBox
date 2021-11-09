@@ -1,0 +1,10 @@
+
+*.pyc
+app.log
+json/champ-data.json
+json/lol-champions-v1-inventories-61663941-champions-minimal.json
+json/lol-champions-v1-owned-champions-minimal.json
+json/lol-loot-v1-player-loot-CHAMPION_RENTAL_1-context-menu.json
+json/lol-loot-v1-player-loot.json
+json/lol-store-v1-catalog-champion.json
+json/lol-store-v1-catalog.json
