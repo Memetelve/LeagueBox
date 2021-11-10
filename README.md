@@ -20,4 +20,4 @@ League of Legends currency helper
 
 ## FAQ
 - Why it is taking so long?
-	It is because Riot says you cant retrieve store data from lcu api, so I need to get champion prices from [cdn.merakianalytics.com](merakianalytics.com), it takes a moment
+	It is because Riot says you cant retrieve store data from lcu api, so I need to get champion prices from [cdn.merakianalytics.com](www.merakianalytics.com), it takes a moment
