@@ -7,15 +7,15 @@ from base64 import b64encode
 
 def request(method, path, query='', data=''):
         if query:
-            url = '%s://%s:%s%s?%s' % (protocol, '127.0.0.1', port, path, query)
+                url = f'{protocol}://127.0.0.1:{port}{path}?{query}'
         else:
-            url = '%s://%s:%s%s' % (protocol, '127.0.0.1', port, path)
+                url = f'{protocol}://127.0.0.1:{port}{path}'
         fn = getattr(s, method)
         if data:
             return fn(url, verify=False, headers=headers, json=data)
         try:
             return fn(url, verify=False, headers=headers)
-        except:
+        except Exception:
             return 0
 
 # Get path of running process with specified name
@@ -23,7 +23,7 @@ def exe_path(process_name):
     for proc in psutil.process_iter():
         try:
             if process_name.lower() in proc.name().lower():
-                return str(proc.exe())[:-16]
+                return str(proc.exe())[:-len(process_name)]
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
     return None
@@ -57,8 +57,8 @@ def get_lockfile():
         password = lock[3]
 
         global userpass, headers, s
-        userpass = b64encode(bytes('%s:%s' % ('riot', password), 'utf-8')).decode('ascii')
-        headers = { 'Authorization': 'Basic %s' % userpass }
+        userpass = b64encode(bytes(f'riot:{password}', 'utf-8')).decode('ascii')
+        headers = {'Authorization': f'Basic {userpass}', 'Content-Type': "application/json"}
         # Create Request session
         s = requests.session()
 
@@ -78,10 +78,9 @@ def get_unowned_champions(summoner_id, owned_champions, champ_list):
 
 
     price = 0
-    with alive_bar(len(unowned_champions)) as bar:
-        for id in unowned_champions:
-            price += external_info.get_champion_price(id, champ_list)
-            bar()
+    for id in unowned_champions:
+        price += external_info.get_champion_price(id, champ_list)
+
 
     return unowned_champions, price
 
@@ -94,17 +93,19 @@ def get_client_info():
     # Get shard info
     workshop_items = request('get', '/lol-loot/v1/player-loot').json()
     shards = 0
+    unowned = []
+
+
+    # Check if any champions from shards are unowned
     for item in workshop_items:
         if item['disenchantLootName'] == 'CURRENCY_champion':
+            if item['itemStatus'] == 'NONE':
+                unowned.append(item['itemDesc'])
             amount = item['count']
             be = item['disenchantValue']
             shards += be*amount
 
-
-    # Fetch summ. id
-    summ_id = get_summoner_id()
-
-    return BE, shards
+    return BE, shards, unowned
 
 def get_summoner_id():
     # Get summoner id
