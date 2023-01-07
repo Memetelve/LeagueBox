@@ -2,7 +2,7 @@ from colorama import Style
 
 
 def print_ascii_art():
-        print(ascii_art)
+        colored(ascii_art, color='#ffc505')
 
 
 ascii_art = '''
