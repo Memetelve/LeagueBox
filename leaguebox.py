@@ -7,6 +7,8 @@ from core import ascii as art
 from core import lcu_info as lcu
 from core import external_info as external
 
+from core.ascii import colored
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
@@ -18,11 +20,11 @@ def get_data():
     summoner_id = lcu.get_summoner_id()
     owned_champions = lcu.get_owned_champions()
     unowned_champions, missingBE = lcu.get_unowned_champions(summoner_id, owned_champions)
-    blue_essence, shards, unowned = lcu.get_client_info()
+    blue_essence, orange_essence, shards, unowned = lcu.get_client_info()
 
     champion_dict, champion_dict_id = external.get_champion_list()
 
-    return owned_champions, unowned_champions, missingBE, summoner_id, blue_essence, shards, unowned, champion_dict, champion_dict_id
+    return owned_champions, unowned_champions, missingBE, summoner_id, blue_essence, orange_essence, shards, unowned, champion_dict, champion_dict_id
 
 def cls():
     os.system("cls" if os.name == "nt" else "clear")
@@ -62,12 +64,12 @@ def disenchant_shards(mastery=False, owned=False, *, masteries=None):
         threads.append(thread)
         sanity_check_count += count
 
-    art.color_print("\n", Back.RED)
-    art.color_print(f"Sanity check: {sanity_check_count} shards will be disenchanted", Back.RED)
-    art.color_print("Are you sure you want to continue? (y/n)", Back.RED)
+    colored('')
+    colored(f'Sanity check: {sanity_check_count} shards will be disenchanted', color='#ffffff', bg='#FF0000')
+    colored("Are you sure you want to continue? (y/n)", color='#ffffff', bg='#FF0000')
 
     if input().lower() not in ["y", "yes"]:
-        return
+        return 'Disenchanting cancelled by user'
 
     for thread in threads:
         thread.start()
@@ -85,35 +87,35 @@ def disenchant(loot_name, repeat):
         data=f"[{json.dumps(loot_name)}]",
     )
 
-def main_screen(message='', blue_essence=None, shards=None, unowned=None, unowned_champions=None, missingBE=None, champion_dict_id=None):
+def main_screen(message='', blue_essence=None, orange_essence=None, shards=None, unowned=None, unowned_champions=None, missingBE=None, champion_dict_id=None):
     art.print_ascii_art()
 
     print("\n")
-    art.color_print(message, Back.YELLOW)
+    colored(message, bg='ffff00')
     print("\n")
 
 
-    art.color_print(f"BE alone: {blue_essence}", Fore.BLUE)
-    art.color_print(f"All champion shards: {shards}", Fore.YELLOW)
-    art.color_print(f"All champion shards + current BE: {shards + blue_essence}", Fore.GREEN)
-    art.color_print(f"Missing champions: {len(unowned_champions)}", Fore.RED)
-    art.color_print(f"BE for those {len(unowned_champions)} champions: {missingBE}", Fore.RED)
-    art.color_print("\n", Fore.RED)
-    art.color_print(f"Shards of unowned champions: {len(unowned)}", Fore.YELLOW)
+    colored(f'BE alone: {blue_essence}', color='#0ACAE5')
+    colored(f'OE alone: {orange_essence}', color='#F29130')
+    colored(f'All champion shards: {shards}', color='#5C5B57')
+    colored(f'All champion shards + current BE: {shards + blue_essence}', color='#00bb00')
+    colored(f'Missing champions: {len(unowned_champions)}', color='#c93f38')
+    colored(f'BE for those {len(unowned_champions)} champions: {missingBE}\n', color='#c93f38')
+    colored(f'Shards of unowned champions: {len(unowned)}', color='#FFFF00')
 
-    unowned_champs = "".join(
-        f"{champion_dict_id[str(champ_id)]}, " for champ_id in unowned_champions
-    )
 
-    print(f"\nUnowned champions: {unowned_champs}")
+    unowned_champs = "".join(unowned)
+    unowned_champs = unowned_champs if unowned_champs != "" else "None"
+    print(f"Unowned champion shards: {unowned_champs}")
 
 def main(message=''):
 
-    owned_champions, unowned_champions, missingBE, summoner_id, blue_essence, shards, unowned, champion_dict, champion_dict_id = get_data()
+    owned_champions, unowned_champions, missingBE, summoner_id, blue_essence, orange_essence, shards, unowned, champion_dict, champion_dict_id = get_data()
 
     cls()
-    main_screen(message, blue_essence, shards, unowned, unowned_champions, missingBE, champion_dict_id)
+    main_screen(message, blue_essence, orange_essence, shards, unowned, unowned_champions, missingBE, champion_dict_id)
 
+    print("\n")
     print("1. Disenchant all shards (save 1 shard for every unowned champion)")
     print("2. Disenchant all shards (save 1 shard for every unowned champion + 1 or 2 for every champion you have mastery 6 or 7)")
     print("9. Exit")

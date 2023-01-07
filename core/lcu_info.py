@@ -1,8 +1,7 @@
 import psutil, time, requests, threading, json
+from base64 import b64encode
 
 from . import external_info
-from alive_progress import alive_bar
-from base64 import b64encode
 
 def request(method, path, query='', data=''):
         if query:
@@ -86,8 +85,10 @@ def get_unowned_champions(summoner_id, owned_champions):
 def get_client_info():
 
     # Get wallet info
-    wallet = request('get', '/lol-inventory/v1/wallet/be').json()
-    BE = int(wallet['lol_blue_essence'])
+    wallet_be = request('get', '/lol-inventory/v1/wallet/ORANGE_ESSENCE').json()
+
+    BE = int(wallet_be['lol_blue_essence'])
+    OE = int(wallet_be['lol_orange_essence'])
 
     # Get shard info
     workshop_items = request('get', '/lol-loot/v1/player-loot').json()
@@ -104,7 +105,7 @@ def get_client_info():
             be = item['disenchantValue']
             shards += be*amount
 
-    return BE, shards, unowned
+    return BE, OE, shards, unowned
 
 def get_summoner_id():
     # Get summoner id
