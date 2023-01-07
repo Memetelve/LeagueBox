@@ -14,8 +14,6 @@ League of Legends currency helper
 	- calculate how much BE you need to buy the missing ones
 
 ## Upcoming
-- show stats for Orange Essence
-- get value (OE) of skin shards/wards/emotes
 - caching
 
 ## FAQ
