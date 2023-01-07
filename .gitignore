@@ -10,3 +10,5 @@ json/lol-loot-v1-player-loot.json
 json/lol-store-v1-catalog-champion.json
 json/lol-store-v1-catalog.json
 output/leaguebox.exe
+
+*.json

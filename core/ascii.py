@@ -12,4 +12,4 @@ ascii_art = '''
         \/     \/      \/ /_____/              \/         \/               \/'''
 
 def color_print(str='Empty string', color_fore='', color_back=''):
-    print(f'{color_fore}{color_back}{str}{Style.RESET_ALL}')
+        print(f'{color_fore}{color_back}{str}{Style.RESET_ALL}')

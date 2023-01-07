@@ -1,9 +1,8 @@
-import psutil, time, requests
+import psutil, time, requests, threading, json
 
 from . import external_info
 from alive_progress import alive_bar
 from base64 import b64encode
-
 
 def request(method, path, query='', data=''):
         if query:
@@ -12,7 +11,7 @@ def request(method, path, query='', data=''):
                 url = f'{protocol}://127.0.0.1:{port}{path}'
         fn = getattr(s, method)
         if data:
-            return fn(url, verify=False, headers=headers, json=data)
+            return fn(url, verify=False, headers=headers, data=data)
         try:
             return fn(url, verify=False, headers=headers)
         except Exception:
@@ -70,7 +69,7 @@ def get_owned_champions():
             if champion['ownership']['owned'] == True
         ]
 
-def get_unowned_champions(summoner_id, owned_champions, champ_list):
+def get_unowned_champions(summoner_id, owned_champions):
 
     all_champs = request('get', f'/lol-champions/v1/inventories/{summoner_id}/champions-minimal').json()
     unowned_champions = [champ['id'] for champ in all_champs if champ['id'] not in owned_champions]
@@ -79,7 +78,7 @@ def get_unowned_champions(summoner_id, owned_champions, champ_list):
 
     price = 0
     for id in unowned_champions:
-        price += external_info.get_champion_price(id, champ_list)
+        price += external_info.get_champion_price(id)
 
 
     return unowned_champions, price
@@ -111,3 +110,14 @@ def get_summoner_id():
     # Get summoner id
     summoner = request('get', '/lol-summoner/v1/current-summoner').json()
     return summoner['summonerId']
+
+def get_player_masteries(summonerId):
+    # Get mastery info
+    masteries = request('get', f'/lol-collections/v1/inventories/{summonerId}/champion-mastery').json()
+
+    for dictionary in masteries:
+        keys_to_remove = [key for key in dictionary.keys() if key not in ['championId', 'championLevel']]
+        for key in keys_to_remove:
+            dictionary.pop(key)
+
+    return masteries
