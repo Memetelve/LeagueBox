@@ -96,8 +96,8 @@ def main_screen(message='', blue_essence=None, orange_essence=None, blue_essence
 
     colored(f'BE alone: {blue_essence}', color='#0ACAE5')
     colored(f'OE alone: {orange_essence}', color='#F29130')
-    colored(f'All champion shards: {blue_essence_shards}', color='#5C5B57')
-    colored(f'All cosmetic shards: {orange_essence_shards}', color='#5C5B57')
+    colored(f'All champion shards: {blue_essence_shards}BE', color='#5C5B57')
+    colored(f'All cosmetic shards: {orange_essence_shards}OE', color='#5C5B57')
     colored(f'All champion shards + current BE: {blue_essence_shards + blue_essence}', color='#2099e9')
     colored(f'All cosmetic shards + current OE: {orange_essence_shards + orange_essence}\n', color='#e48653')
     colored(f'Missing champions: {len(unowned_champions)}', color='#c93f38')
