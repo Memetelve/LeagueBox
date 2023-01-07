@@ -92,20 +92,30 @@ def get_client_info():
 
     # Get shard info
     workshop_items = request('get', '/lol-loot/v1/player-loot').json()
-    shards = 0
+    blue_essence_shards = 0
+    orange_essence_shards = 0
     unowned = []
 
 
     # Check if any champions from shards are unowned
     for item in workshop_items:
+
         if item['disenchantLootName'] == 'CURRENCY_champion':
             if item['itemStatus'] == 'NONE':
                 unowned.append(item['itemDesc'])
             amount = item['count']
             be = item['disenchantValue']
-            shards += be*amount
+            blue_essence_shards += be*amount
 
-    return BE, OE, shards, unowned
+        elif item['disenchantLootName'] == 'CURRENCY_cosmetic':
+            if item['itemStatus'] == 'NONE':
+                unowned.append(item['itemDesc'])
+            amount = item['count']
+            oe = item['disenchantValue']
+            orange_essence_shards += oe*amount
+
+
+    return BE, OE, blue_essence_shards, orange_essence_shards, unowned
 
 def get_summoner_id():
     # Get summoner id

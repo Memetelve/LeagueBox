@@ -20,11 +20,11 @@ def get_data():
     summoner_id = lcu.get_summoner_id()
     owned_champions = lcu.get_owned_champions()
     unowned_champions, missingBE = lcu.get_unowned_champions(summoner_id, owned_champions)
-    blue_essence, orange_essence, shards, unowned = lcu.get_client_info()
+    blue_essence, orange_essence, blue_essence_shards, orange_essence_shards, unowned = lcu.get_client_info()
 
     champion_dict, champion_dict_id = external.get_champion_list()
 
-    return owned_champions, unowned_champions, missingBE, summoner_id, blue_essence, orange_essence, shards, unowned, champion_dict, champion_dict_id
+    return owned_champions, unowned_champions, missingBE, summoner_id, blue_essence, orange_essence, blue_essence_shards, orange_essence_shards, unowned, champion_dict, champion_dict_id
 
 def cls():
     os.system("cls" if os.name == "nt" else "clear")
@@ -87,18 +87,19 @@ def disenchant(loot_name, repeat):
         data=f"[{json.dumps(loot_name)}]",
     )
 
-def main_screen(message='', blue_essence=None, orange_essence=None, shards=None, unowned=None, unowned_champions=None, missingBE=None, champion_dict_id=None):
+def main_screen(message='', blue_essence=None, orange_essence=None, blue_essence_shards=None, orange_essence_shards=None, unowned=None, unowned_champions=None, missingBE=None, champion_dict_id=None):
     art.print_ascii_art()
 
     print("\n")
-    colored(message, bg='ffff00')
-    print("\n")
+    colored(message, color='#000000', bg='#ffff00')
 
 
     colored(f'BE alone: {blue_essence}', color='#0ACAE5')
     colored(f'OE alone: {orange_essence}', color='#F29130')
-    colored(f'All champion shards: {shards}', color='#5C5B57')
-    colored(f'All champion shards + current BE: {shards + blue_essence}', color='#00bb00')
+    colored(f'All champion shards: {blue_essence_shards}', color='#5C5B57')
+    colored(f'All cosmetic shards: {orange_essence_shards}', color='#5C5B57')
+    colored(f'All champion shards + current BE: {blue_essence_shards + blue_essence}', color='#2099e9')
+    colored(f'All cosmetic shards + current OE: {orange_essence_shards + orange_essence}\n', color='#e48653')
     colored(f'Missing champions: {len(unowned_champions)}', color='#c93f38')
     colored(f'BE for those {len(unowned_champions)} champions: {missingBE}\n', color='#c93f38')
     colored(f'Shards of unowned champions: {len(unowned)}', color='#FFFF00')
@@ -110,14 +111,15 @@ def main_screen(message='', blue_essence=None, orange_essence=None, shards=None,
 
 def main(message=''):
 
-    owned_champions, unowned_champions, missingBE, summoner_id, blue_essence, orange_essence, shards, unowned, champion_dict, champion_dict_id = get_data()
+    owned_champions, unowned_champions, missingBE, summoner_id, blue_essence, orange_essence, blue_essence_shards, orange_essence_shards, unowned, champion_dict, champion_dict_id = get_data()
 
     cls()
-    main_screen(message, blue_essence, orange_essence, shards, unowned, unowned_champions, missingBE, champion_dict_id)
+    main_screen(message, blue_essence, orange_essence, blue_essence_shards, orange_essence_shards, unowned, unowned_champions, missingBE, champion_dict_id)
 
     print("\n")
-    print("1. Disenchant all shards (save 1 shard for every unowned champion)")
-    print("2. Disenchant all shards (save 1 shard for every unowned champion + 1 or 2 for every champion you have mastery 6 or 7)")
+    print("1. Disenchant all champion shards (save 1 shard for every unowned champion)")
+    print("2. Disenchant all champion shards (save 1 shard for every unowned champion + 1 or 2 for every champion under mastery 6 or 7)")
+    print("2. Disenchant all champion shards (not recommended)")
     print("9. Exit")
 
 
@@ -136,5 +138,7 @@ if __name__ == "__main__":
             summoner_id = lcu.get_summoner_id()
             masteries = lcu.get_player_masteries(summoner_id)
             message = disenchant_shards(mastery=True, owned=True, masteries=masteries)
+        elif next_action == "3":
+            message = disenchant_shards()
         elif next_action == "9":
             exit(0)
