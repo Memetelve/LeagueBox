@@ -8,16 +8,15 @@ League of Legends currency helper
 ## Features
 - Get contents of your loot
 	- detect champion shards and calculate their disenchant value
-	- add your BE to shard value to show how much BE you can have
-- Detect owned/unowned  champions 
+	- detect skin/ward/eternals shards and calculate their disenchant value
+- Detect owned/unowned  champions
 	- show how many are missing
-	- calculate how much BE you need to buy them all (not counting what you have)
+	- calculate how much BE you need to buy the missing ones
 
 ## Upcoming
 - show stats for Orange Essence
 - get value (OE) of skin shards/wards/emotes
-- caching 
+- caching
 
 ## FAQ
-- Why it is taking so long?
-	It is because Riot says you cant retrieve store data from lcu api, so I need to get champion prices from [cdn.merakianalytics.com](https://merakianalytics.com), it takes a moment
+- no FAQ right not (ask questions if you have some)
